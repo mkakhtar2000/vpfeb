@@ -1,0 +1,144 @@
+    1  ll
+    2  vi /etc/passwd
+    3  ip a
+    4  vi /etc/ssh/sshd_config
+    5  ip a
+    6  vi /etc/netplan/00-installer-config.yaml 
+    7  netplan apply 
+    8  vi /etc/netplan/00-installer-config.yaml 
+    9  netplan apply 
+   10  ip a
+   11  init 0
+   12  vi /etc/ssh/sshd_config
+   13  passwd root
+   14  ip a
+   15  apt update
+   16  echo   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+   17    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   18  apt update &&  apt-get install docker-ce docker-ce-cli containerd.io
+   19  systemctl status docker.service 
+   20  init 0
+   21  ip a
+   22  apt-get install -y apt-transport-https ca-certificates curl
+   23  sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+   24  echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   25  apt-get install -y kubelet kubeadm kubectl
+   26  apt update
+   27  apt-get install -y kubelet kubeadm kubectl
+   28  history 
+   29  free -h
+   30  swapoff -a
+   31  vi /etc/fstab 
+   32  mount -a
+   33  free -h
+   34  cat > /etc/docker/daemon.json <<EOF
+   35  {
+   36    "exec-opts": ["native.cgroupdriver=systemd"],
+   37    "log-driver": "json-file",
+   38    "log-opts": {
+   39      "max-size": "1024m"
+   40    },
+   41    "storage-driver": "overlay2"
+   42  }
+   43  EOF
+   44  systemctl daemon-reload 
+   45  systemctl restart docker
+   46  vi /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+   47  init 0
+   48  #kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.1.20 
+   49  kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=192.168.1.20 
+   50  mkdir -p $HOME/.kube
+   51  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   52  chown $(id -u):$(id -g) $HOME/.kube/config
+   53  kubectl get nodes
+   54  kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+   55  kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+   56  watch kubectl get pods -n calico-system
+   57  kubectl get pods -n calico-system
+   58  kubectl get pods
+   59  kubectl get nodes
+   60  history 
+   61  vi /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+   62  kubectl get nodes
+   63  init 0
+   64  kubectl get pod
+   65  kubectl get nodes
+   66  kubectl get node
+   67  mkdir myapp
+   68  cd myapp/
+   69  ls
+   70  vi pod.yaml
+   71  cd
+   72  vi .bashrc 
+   73  source .bashrc 
+   74  kubectl create -f myapp/pod.yaml 
+   75  cd myapp/
+   76  vi pod.yaml 
+   77  kubectl create -f pod.yaml 
+   78  kubectl get pod
+   79  kubectl describe pod mypod 
+   80  kubectl get pod
+   81  kubectl describe pod mypod 
+   82  kubectl get pod
+   83  kubectl logs mypod 
+   84  kubectl get pod
+   85  kubectl exec -it mypod -- bash
+   86  ls
+   87  cp pod.yaml mcon-pod.yaml
+   88  vi mcon-pod.yaml 
+   89  kubectl create -f  mcon-pod.yaml 
+   90  kubectl get pod
+   91  kubectl describe pod m-pod 
+   92  kubectl get pod
+   93  kubectl describe pod m-pod 
+   94  kubectl get pod
+   95  kubectl describe pod m-pod 
+   96  kubectl logs m-pod 
+   97  kubectl logs m-pod -c con1 
+   98  kubectl logs m-pod -c con2
+   99  kubectl exec -it m-pod -c con1 -- bash
+  100  kubectl exec -it m-pod -c con2 -- bash
+  101  ls
+  102  kubectl get pod
+  103* kubectl describe pod m-pod
+  104  kubectl get pod 
+  105  kubectl get pod -o wide
+  106  kubectl get pod --show-labels 
+  107  kubectl get nodes
+  108  kubectl describe nodes node1
+  109  kubectl get pod
+  110  kubectl delete pod mypod 
+  111  kubectl get pod
+  112  kubectl delete -f mcon-pod.yaml 
+  113  vi pod.yaml 
+  114  kubectl create -f pod.yaml 
+  115  vi pod.yaml 
+  116  kubectl get pod
+  117  kubectl apply -f pod.yaml 
+  118  kubectl get service
+  119  kubectl get svc
+  120  kubectl delete -f pod.yaml 
+  121  vi pod.yaml 
+  122  kubectl apply -f pod.yaml 
+  123  kubectl get pod
+  124  kubectl get svc
+  125  vi pod.yaml 
+  126  kubectl get pod
+  127  kubectl get po
+  128  kubectl get pods
+  129  kubectl run test-pod --image=httpd --port=80 
+  130  kubectl get pod
+  131  kubectl run test-pod --image=httpd --port=80 --dry-run=client -o yaml
+  132  kubectl run test-pod --image=httpd --port=80 --expose --dry-run=client -o yaml  > test.yaml
+  133  vi test.yaml 
+  134  vi pod.yaml 
+  135  ls
+  136  kubectl 
+  137  kubectl get pod
+  138  kubectl cp pod.yaml test-pod:/tmp
+  139  kubectl exec -it test-pod -- bash
+  140  kubectl exec -it test-pod -- cat /etc/passwd > abc.tt
+  141  ls
+  142  cat abc.tt 
+  143  history 
+  144  history > cmd-02022.txt
