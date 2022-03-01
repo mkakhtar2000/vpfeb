@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mango-dep
+  name: wordpress-dep
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mango-dep
+  template:
+    metadata:
+      labels:
+        app: mango-dep
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mydb-svc
+        - name: WORDPRESS_DB_USER
+          value: root
+        - name: WORDPRESS_DB_PASSWORD
+          value: test123
+        - name: WORDPRESS_DB_NAME
+          value: wordpress
+        - name: WORDPRESS_TABLE_PREFIX
+          value: wp_ 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-svc
+spec:
+  ports:
+  - port: 80
+  selector:
+     app: mango-dep 
+

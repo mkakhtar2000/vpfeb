@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: mydep
+    name: mydep-vol
     annotations:
       kubernetes.io/change-cause: "first time deploy "
       description: "this is demo"
 spec:
-   replicas: 3
+   replicas: 1
    selector:
      matchLabels:
       app: myapp
@@ -20,6 +20,20 @@ spec:
           image: nginx:latest
           ports:
           - containerPort: 80
+          volumeMounts:
+          - name: myvol
+            mountPath: /data/log
+        - name: con2
+          image: tomcat:latest
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - name: myvol
+            mountPath: /data
+        volumes:
+        - name: myvol
+          emptyDir: {}
+
 
 ---
 ---

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql-dep
+  name: mysql-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-dep
+  template:
+    metadata:
+      labels:
+        app: mysql-dep
+    spec:
+      containers:
+      - name: nginx
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: test123
+        - name: MYSQL_DATABASE
+          value: wordpress
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mydb-svc
+spec:
+  ports:
+  - port: 3306
+  selector:
+     app: mysql-dep 
+

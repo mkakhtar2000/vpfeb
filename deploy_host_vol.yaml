@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mydep-host-vol
+    annotations:
+      kubernetes.io/change-cause: "first time deploy "
+      description: "this is demo"
+spec:
+   replicas: 1
+   selector:
+     matchLabels:
+      app: myapp
+   template:
+      metadata: 
+        labels:
+           app: myapp
+      spec:
+        containers:
+        - name: con1
+          image: nginx:latest
+          ports:
+          - containerPort: 80
+          volumeMounts:
+          - name: myvol
+            mountPath: /data/log
+        - name: con2
+          image: tomcat:latest
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - name: myvol
+            mountPath: /data
+        volumes:
+        - name: myvol
+          hostPath:
+            path: /data
+
+
