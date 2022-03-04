@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: devops-res-quota
+  namespace: devops 
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi
+    count/services: "10"
+    count/secrets: "20"
+    count/deployments.apps: "8"
+    count/pods: "100"

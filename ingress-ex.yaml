@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mydep
+    annotations:
+      kubernetes.io/change-cause: "first time deploy "
+      description: "this is demo"
+spec:
+   replicas: 3
+   selector:
+     matchLabels:
+      app: myapp-ing
+   template:
+      metadata: 
+        labels:
+           app: myapp-ing
+      spec:
+        containers:
+        - name: con1
+          image: 966145/myserver121:latest
+          ports:
+          - containerPort: 80
+
+---
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: mydep-svc
+spec:
+   selector:
+     app: myapp-ing
+   ports:
+   - port: 80
+   
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myde-ing
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "app.abc.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: mydep-svc
+            port:
+              number: 80
+
